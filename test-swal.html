@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test-sweetalert</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+	<script type="text/javascript">
+		var staralert = {
+			/*
+				功能： 提示错误
+				参数：
+					- msg： 提示的内容（可选）
+			 */
+			'alertError': function(msg){
+				swal('提示', msg, 'error');
+			},
+			/*
+				功能： 信息提示
+				参数：
+					- msg： 提示的内容（可选）
+			 */
+			'alertInfo': function(msg){
+				swal('提醒', msg, 'warning');
+			},
+			
+			/*
+				功能： 可以自定义标题的信息提示
+				参数：
+					- msg： 提示的内容（可选）
+			 */
+			'alertInfoWithTitle': function(title, msg){
+				swal(title, msg);
+			},
+			/*
+				功能： 成功提示
+				参数：
+					- msg： 提示的内容（可选）
+			 */
+			'alertSuccess': function(msg, confirmCallback){
+				args = {
+					'title': '提示',
+					'text': msg,
+					'type': 'success'
+				}
+				swal(args, confirmCallback);
+			},
+			/*
+				功能： 可以自定义标题的成功提示
+				参数：
+					- msg： 提示的内容（可选）
+			 */
+			'alertSuccessWithTitle': function(title, msg){
+				swal(title, msg,"success");
+			},
+			/*
+				功能： 确认提示
+				参数：
+					- title： 提示框标题（可选）
+					- type： 提示框的类型（可选）
+					- confirmText： 确认按钮文本（可选）
+					- cancelText： 取消按钮文本（可选）
+					- msg： 提示框内容（必选）
+					-confirmCallback： 点击确认按钮的回调（可选）
+					-cancelCallback： 点击取消按钮的回调（可选）
+			 */
+			'alertConfirm':function(params) {
+				swal({
+					'title': params['title'] ? params['title'] : '提示',
+					'showCancelButton': true,
+					'showConfirmButton': true,
+					'type': params['type'] ? params['type'] : '',
+					'confirmButtonText': params['confirmText'] ? params['confirmText'] : '确认',
+					'cancelButtonText': params['cancelText'] ? params['cancelText'] : '取消',
+					'text': params['msg'] ? params['msg'] : ''
+				},function(isConfirm){
+					if(isConfirm){
+						if (params['confirmCallback']) {
+							params['confirmCallback']();
+						}
+					}else{
+						if (params['cancelCallback']) {
+							params['cancelCallback']();
+						}
+					}
+				})
+			},
+			/*
+				功能： 输入提示
+				参数：
+					- title： 提示框标题（可选）
+					- text: 提示框的内容（可选）
+					- placeholder: 输入框的占位文字（可选
+					- confirmText： 确认按钮文本（可选）
+					- cancelText： 取消按钮文本（可选）
+					- confirmCallback： 点击确认按钮的回调（可选）
+					- cancelCallback： 点击取消按钮的回调（可选）
+			 */
+			'alertOneInput': function(params) {
+				swal({
+					'title': params['title'] ? params['title'] : '提示',
+					'text': params['text'] ? params['text'] : '',
+					'type': 'input',
+					'showCancelButton': true,
+					'animation': 'slide-from-top',
+					'closeOnConfirm': false,
+					'showLoaderOnConfirm': true,
+					'inputPlaceholder': params['placeholder'] ? params['placeholder'] : '请输入',
+					'confirmButtonText': params['confirmText'] ? params['confirmText'] : '确认',
+					'cancelButtonText': params['cancelText'] ? params['cancelText'] : '取消',
+
+				},function(inputValue){
+					if(inputValue === false) return false;
+					if(inputValue === ''){
+						swal.showInputError	("请输入板块名称！");
+						return false;
+					}
+					if (params['confirmCallback']) {
+						params['confirmCallback'](inputValue);
+					}
+				})
+			},
+			/*
+				功能： 成功toast提示（1s后消失）
+				参数：
+					- msg： 提示信息
+			 */
+			'alertSuccessToast': function(msg) {
+				if (!msg) {
+					msg = '成功！';
+				}
+				this.alertToast(msg, 'success');
+			},
+			/*
+				功能： 错误toast提示（1s后消失）
+				参数：
+					- msg： 提示信息
+			 */
+			'alertErrorToast': function(msg) {
+				this.alertToast(msg, 'error');
+			},
+			/*
+				功能： 弹出toast（1s后消失）
+				参数：
+					- msg： 提示信息
+					- type： toast的类型
+			 */
+			'alertToast': function(msg, type) {
+				swal({
+					'title': msg,
+					'text': '',
+					'type': type,
+					'showCancelButton': false,
+					'showConfirmButton': false,
+					'timer': 1000
+				})
+			},
+			//关闭当前对话框
+			'close': function() {
+				swal.close();
+			}
+
+		}
+	</script>
+</head>
+<body>
+
+	<button id="btn1">错误提示</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn1");
+		btn.onclick = function(){
+			staralert.alertError("不能删除板块");
+		}
+	</script>
+	<button id="btn2">信息提示1</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn2");
+		btn.onclick = function(){
+			staralert.alertInfo("没有权限");
+		}
+	</script>
+	<button id="btn3">信息提示2</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn3");
+		btn.onclick = function(){
+			staralert.alertInfoWithTitle("警告", "没有权限");
+		}
+	</script>
+	<button id="btn4">成功提示</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn4");
+		btn.onclick = function(){
+			staralert.alertSuccess("文章发表成功");
+		}
+	</script>
+	<button id="btn5">确认提示</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn5");
+		btn.onclick = function(){
+			staralert.alertConfirm({
+				"confirmText": "再发一篇",
+				"cancelText": "回到首页",
+				"msg": "恭喜！文章发表成功！",
+				"confirmCallback": function(){
+					alert('点击了确定按钮');
+				},
+				"cancelCallback": function(){
+					alert('点击了取消按钮');
+				}
+			});
+		}
+	</script>
+	<button id="btn6">输入框</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn6");
+		btn.onclick = function(){
+			staralert.alertOneInput({
+				"title": "提示（请输入）",
+				"text": "添加新版块",
+				"placeholder": "输入板块名称",
+				"confirmCallback": function(inputValue){
+					alert('输入了' + inputValue);
+				}
+			});
+		}
+	</script>
+	<button id="btn7">成功消息</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn7");
+		btn.onclick = function(){
+			staralert.alertSuccessToast('恭喜！密码修改成功')
+		}
+	</script>
+	<button id="btn8">失败消息</button>
+	<script type="text/javascript">
+		var btn = document.getElementById("btn8");
+		btn.onclick = function(){
+			staralert.alertErrorToast('网络异常')
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
